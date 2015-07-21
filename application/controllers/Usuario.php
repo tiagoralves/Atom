@@ -3,23 +3,52 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Usuario extends CI_Controller {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
-	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->data['titulo'] = "Login !";
+	}
+
 	public function index()
+	{
+		try{
+
+			$this->data['mensagem'] = "Login de acesso !";
+
+			if( !empty($_POST)  && isset($_POST) )
+			{	
+				$this->verifica_login($_POST);
+			}
+			$this->load->view('login', $this->data);
+		} catch (Exception $e) {
+
+			$this->data['error'] = $e->getMessage().'Código do erro: '.$e->getCode();
+
+		}
+
+	}
+
+	public function home()
 	{
 		$this->load->view('login');
 	}
+
+	public function verifica_login($data)
+	{
+		try{
+			$this->load->model('usuarios');
+			$usuario = new Usuarios();
+
+			$this->usuarios = $usuario->get_all();
+
+			var_dump($this->usuarios);
+
+			die('chegou');
+		} catch (Exception $e) {
+
+			throw new Exception($e->getMessages(), "#101");
+
+		}
+	}
+
 }
